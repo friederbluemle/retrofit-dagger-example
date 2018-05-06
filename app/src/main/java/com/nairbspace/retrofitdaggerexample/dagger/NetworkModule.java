@@ -2,8 +2,8 @@ package com.nairbspace.retrofitdaggerexample.dagger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.nairbspace.retrofitdaggerexample.retrofit.ExampleInterceptor;
-import com.nairbspace.retrofitdaggerexample.retrofit.ExampleInterface;
+import com.nairbspace.retrofitdaggerexample.retrofit.ApiService;
+import com.nairbspace.retrofitdaggerexample.retrofit.UrlInterceptor;
 
 import javax.inject.Singleton;
 
@@ -18,13 +18,13 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    ExampleInterceptor provideInterceptor() { // This is where the Interceptor object is constructed
-        return new ExampleInterceptor();
+    UrlInterceptor provideUrlInterceptor() { // This is where the Interceptor object is constructed
+        return new UrlInterceptor();
     }
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient(ExampleInterceptor interceptor) { // The Interceptor is then added to the client
+    OkHttpClient provideOkHttpClient(UrlInterceptor interceptor) { // The Interceptor is then added to the client
         return new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .build();
@@ -47,7 +47,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    ExampleInterface provideExampleInterface(Retrofit.Builder builder) { // This is where Retrofit is finally created
-        return builder.build().create(ExampleInterface.class);           // with the Interface we provided
+    ApiService provideApiService(Retrofit.Builder builder) { // This is where Retrofit is finally created
+        return builder.build().create(ApiService.class);     // with the Interface we provided
     }
 }

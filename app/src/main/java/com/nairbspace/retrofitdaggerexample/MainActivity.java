@@ -10,21 +10,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nairbspace.retrofitdaggerexample.retrofit.ExampleInterceptor;
-import com.nairbspace.retrofitdaggerexample.retrofit.ExampleInterface;
-import com.nairbspace.retrofitdaggerexample.retrofit.model.ExampleModel;
+import com.nairbspace.retrofitdaggerexample.retrofit.ApiService;
+import com.nairbspace.retrofitdaggerexample.retrofit.UrlInterceptor;
 
 import javax.inject.Inject;
 
 import okhttp3.HttpUrl;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Inject ExampleInterceptor mInterceptor;
-    @Inject ExampleInterface mInterface;
+    @Inject
+    UrlInterceptor mInterceptor;
+    @Inject
+    ApiService mApiService;
 
     private EditText mApiUrlEditText;
     private Button mRunButton;
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 showProgressBar();
 
-                /** Will return null if http/https url is not properly formatted **/
+                // Will return null if http/https url is not properly formatted
                 HttpUrl url = HttpUrl.parse(mApiUrlEditText.getText().toString());
 
                 if (url == null) {
@@ -81,13 +83,12 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, toastText, Toast.LENGTH_LONG).show();
     }
 
-    private void runRetrofit(String apiUrl) {
-        mInterceptor.setInterceptor(apiUrl); /** This is where we change the Base URL! **/
+    private void runRetrofit(String url) {
+        mInterceptor.setUrl(url); // This is where we change the Base URL!
 
-        Call<ExampleModel> call = mInterface.get();
-        call.enqueue(new Callback<ExampleModel>() {
+        mApiService.get().enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ExampleModel> call, Response<ExampleModel> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String header = response.headers().toString();
                 if (TextUtils.isEmpty(header)) {
                     String blank = "(Header is blank.)";
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ExampleModel> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 showNothingAndToast("Retrofit failed.");
             }
         });
