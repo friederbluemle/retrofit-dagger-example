@@ -2,9 +2,6 @@ package com.nairbspace.retrofitdaggerexample.retrofit;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -13,24 +10,10 @@ import okhttp3.Response;
 /**
  * An interceptor that allows runtime changes to the API Base URL in Retrofit.
  * The Base URL is set by calling the {@link ExampleInterceptor#setInterceptor(String)} method.
- * */
-@Singleton
+ */
 public class ExampleInterceptor implements Interceptor {
-    private static ExampleInterceptor sInterceptor;
     private String mScheme;
     private String mHost;
-
-    @Inject
-    public static ExampleInterceptor get() {
-        if (sInterceptor == null) {
-            sInterceptor = new ExampleInterceptor();
-        }
-        return sInterceptor;
-    }
-
-    private ExampleInterceptor() {
-        // Intentionally blank
-    }
 
     public void setInterceptor(String url) {
         HttpUrl httpUrl = HttpUrl.parse(url);

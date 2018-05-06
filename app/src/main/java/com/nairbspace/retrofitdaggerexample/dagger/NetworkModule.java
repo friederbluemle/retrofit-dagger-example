@@ -19,7 +19,7 @@ public class NetworkModule {
     @Provides
     @Singleton
     ExampleInterceptor provideInterceptor() { // This is where the Interceptor object is constructed
-        return ExampleInterceptor.get();
+        return new ExampleInterceptor();
     }
 
     @Provides
